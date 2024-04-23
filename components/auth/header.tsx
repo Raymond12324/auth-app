@@ -4,13 +4,12 @@ import { Poppins } from "next/font/google";
 interface headerProps{
     label:string;
 }
+const font = Poppins({
+    subsets: ["latin"],
+    weight: ["600"],
+  });
 
 export default function Header( {label} : headerProps) {
-
-    const font = Poppins({
-        subsets: ["latin"],
-        weight: ["600"],
-      });
 
     return (
         <div className={cn("w-full flex flex-col gap-y-4 items-center justify-center", font.className)}>
