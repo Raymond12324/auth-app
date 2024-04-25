@@ -5,35 +5,36 @@ import {zodResolver} from "@hookform/resolvers/zod";
 
 import CardWrapper from "./card-wrapper";
 import * as z from "zod";
-import { loginSchema } from "@/schemas";
+import { RegisterSchema } from "@/schemas";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import FormError from "../form-error";
 import FormSuccess from "../form-success";
-import login from "@/actions/login";
 import { useState, useTransition } from "react";
+import register from "@/actions/register";
 
-export default function LoginForm() {
+export default function RegisterForm() {
 
         const [error, setError] = useState<string>("");
         const [success, setSuccess] = useState<string>("");
         const [isPeding,startTransition] = useTransition();    
 
-        const form = useForm<z.infer<typeof loginSchema>>({
-            resolver: zodResolver(loginSchema),
+        const form = useForm<z.infer<typeof RegisterSchema>>({
+            resolver: zodResolver(RegisterSchema),
             defaultValues: {
                 email: "",
                 password: "",
+                name: "",
             }
         });
 
-        const onSubmit = (values: z.infer<typeof loginSchema>) => {
+        const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
             setError("");
             setSuccess("");
 
             startTransition(() => {
-                login(values).then((response) => {
+                register(values).then((response) => {
                     setError(response.error || "");
                     setSuccess(response.success || "");
                 });
@@ -44,14 +45,31 @@ export default function LoginForm() {
 
     return (
         <CardWrapper
-            headerLabel="Welcome Back"
-            backButtonLabel="Create an account"
-            backButtonHref="/auth/register"
+            headerLabel="Create an account"
+            backButtonLabel="Do you have an account? Sign In"
+            backButtonHref="/auth/login"
             showSocial={true}
         >
             <Form {...form}>
                <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="space-y-4">
+                <FormField 
+                    control={form.control}
+                    name="name"
+                    render={({field}) => (
+                        <FormItem>
+                            <FormLabel>Name</FormLabel>
+                            <FormControl>
+                                <Input
+                                disabled={isPeding}
+                                    {...field}
+                                    placeholder="Name"
+                                />
+                            </FormControl>
+                            {/* <FormMessage/> */}
+                        </FormItem>
+                    )}
+                />
                 <FormField 
                     control={form.control}
                     name="email"
