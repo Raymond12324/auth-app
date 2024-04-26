@@ -5,6 +5,8 @@ import authConfig from "./auth.config"
 
 
 export default auth((req) => {
+    const isLoggedIn = !!req.auth;
+    console.log("IS LOGGED IN:", isLoggedIn)
     console.log("ROUTE:", req.nextUrl.pathname)
 })
 
